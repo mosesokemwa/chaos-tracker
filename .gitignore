@@ -7,3 +7,9 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+.idea
+__vscode__
+
+# react ignore files
+node_modules/
+.env
