@@ -27,12 +27,12 @@ class TaskController
     }
 
     /**
-     * @Route("/home", methods={"GET", "POST"})
+     * @Route("/timer", methods={"GET", "POST"})
      * @throws \Exception
      */
     public function startWatch() {
         $startDate = new \DateTime('@'.strtotime("12:0:0"));
-        return new JsonResponse(["data"=>["start"=>$startDate, "color"=>"green" ]]);
+        return new JsonResponse(["data"=>["start"=>$startDate, "color"=>"yellow" ]]);
     }
 
     /**
@@ -43,8 +43,8 @@ class TaskController
     {
         $eventType = "START";
 
-        $startServers = $this->eventLogger->serviceManager(10, 20, "$eventType");
-        return new JsonResponse(["start"=>["number"=>$startServers, "color"=>"green"]]);
+        $startServers = $this->eventLogger->serviceManager(10, "$eventType");
+        return new JsonResponse([["number"=>$startServers, "color"=>"green"]]);
     }
 
     /**
@@ -54,12 +54,12 @@ class TaskController
      */
     public function stopServers()
     {
-        $stopServers = $this->eventLogger->serviceManager(5, 20, "STOP");
-        return new JsonResponse(["stop"=>["number"=>"$stopServers", "color"=>"pink"]]);
+        $stopServers = $this->eventLogger->serviceManager(5, "STOP");
+        return new JsonResponse([["number"=>$stopServers, "color"=>"pink"]]);
     }
 
     /**
-     * @Route("/servers", methods={"GET", "POST"})
+     * @Route("/report", methods={"GET", "POST"})
      * @param Request $request
      * @return JsonResponse
      */

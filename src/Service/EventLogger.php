@@ -25,34 +25,40 @@ class EventLogger
         $this->dateHelper = new DateHelpers();
     }
 
-    public function logDataToDatabase($eventType, $serverNum){
+    public function logDataToDatabase($eventType, $serverNum, $seconds){
         $recentTime = $this->entityManager->getRepository(LogData::class)
             ->findRecentLogTime("$eventType");
         $recentT = $recentTime[0]["programTime"]->format('Y-m-d H:i:s');
 
         $startDate = new \DateTime("$recentT");
-        $startDate->add(new \DateInterval('PT30S'));
-
-        if($eventType==="START"){
-            $createEntry = new LogData();
-            $createEntry->setEventType("$eventType");
-            $createEntry->setActualTime(new  \DateTime());
-            $createEntry->setServerNum($serverNum);
-            $createEntry->setProgramTime($startDate);
-            $this->entityManager->persist($createEntry);
-            $this->entityManager->flush();
+        $startDate->add(new \DateInterval($seconds));
 
 
-            return $recentT;
-        }
-        return ["error"=>false];
+        $createEntry = new LogData();
+        $createEntry->setEventType("$eventType");
+        $createEntry->setActualTime(new  \DateTime());
+        $createEntry->setServerNum($serverNum);
+        $createEntry->setProgramTime($startDate);
+        $this->entityManager->persist($createEntry);
+        $this->entityManager->flush();
+        return $startDate->format('Y-m-d H:i:s');
     }
 
-    public function serviceManager($start, $stop, $eventType){
+    public function serviceManager($start, $eventType){
         try {
-            $servers = random_int($start, $stop);
-            $dbData = $this->logDataToDatabase($eventType, $servers);
-            return ["server"=>$servers, "db"=>$dbData];
+            if ($eventType=="START"){
+                $stop = 20;
+                $seconds = 'PT30S';
+                $servers = random_int($start, $stop);
+                $dbData = $this->logDataToDatabase($eventType, $servers, $seconds);
+                return ["server"=>$servers, "db"=>$dbData];
+            } elseif ($eventType=="STOP"){
+                $stop = 20;
+                $seconds = 'PT40S';
+                $servers = random_int($start, $stop);
+                $dbData = $this->logDataToDatabase($eventType, $servers, $seconds);
+                return ["server"=>$servers, "db"=>$dbData];
+            }
         } catch (\Exception $e) {
             return ["error"=>true,"errorMessage"=>$e->getMessage()];
         }

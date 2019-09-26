@@ -44,9 +44,10 @@ class LogDataRepository extends ServiceEntityRepository
             ->createQuery(
             "SELECT p.programTime
                 FROM App\Entity\LogData p 
-                WHERE p.eventType = 'START' 
+                WHERE p.eventType = :val 
                 ORDER BY p.programTime DESC"
-        )->setMaxResults(1);
+        )->setParameter("val", "$value")
+            ->setMaxResults(1);
         return $query->execute();
     }
 }

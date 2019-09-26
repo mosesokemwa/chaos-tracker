@@ -13,3 +13,9 @@ __vscode__
 # react ignore files
 node_modules/
 .env
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
