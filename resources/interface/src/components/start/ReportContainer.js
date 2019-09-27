@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 class ReportContainer extends React.Component {
     state = {
         users: [],
-        error: null
+        error: null,
+        isLoading: true
     };
 
     fetchReportData() {
@@ -15,20 +16,21 @@ class ReportContainer extends React.Component {
             .then(data =>
                 this.setState({
                     users: data,
+                    isLoading: false
                 })
             )
-            .catch(error => this.setState({ error, }));
+            .catch(error => this.setState({ error, isLoading: false }));
     }
     componentDidMount() {
         this.fetchReportData();
-        this.timer = setInterval(() => this.fetchReportData(), 5000);
+        this.timer = setInterval(() => this.fetchReportData(), 50000);
     }
     componentWillUnmount() {
         clearInterval(this.timer);
         this.timer = null;
     }
     render() {
-        const { error } = this.state;
+        const { isLoading, error } = this.state;
         return (
             <React.Fragment>
                 <div className="row">
@@ -40,29 +42,24 @@ class ReportContainer extends React.Component {
                 <div className="row">
                     <div className="col">
                         {error ? <p>{error.message}</p> : null}
-                        {this.state.users.map(user =>
-                                <ReportCard key={user.id} {...user} />
-                            )}
+                        {!isLoading ? (
+                            this.state.users.map(user => {
+                                return (
+                                    <div key={user.color} className={user.color}>
+                                        <p>Current Time: {user.number.db}</p>
+                                        <p>Servers Running: {user.number.server}</p>
+                                        <hr />
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <h3>Loading...</h3>
+                        )}
                     </div>
                 </div>
             </React.Fragment>
         );
     }
 }
-
-const ReportCard = (props) => {
-    return (
-        <div>
-            <hr />
-            <p><b>Program Time:</b> {props.number.bd}</p>
-            <p><b>Event:</b> {props.number.event}</p>
-            <p><b>Message:</b> {props.number.message}</p>
-            <p><b>Actual Time:</b> {props.number.actualTime}</p>
-            <p><b>Display Message:</b> {props.number.message}</p>
-            <hr />
-        </div>
-    )
-};
-
 
 export default ReportContainer;

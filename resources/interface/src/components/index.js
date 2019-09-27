@@ -13,8 +13,8 @@ class MainContainer extends React.Component{
             <div className="container">
                 <div className="header">
                     <MainLayout>
-                        <Route path='/logs' component={StartContainer} exact/>
-                        <Route path='/report' component={ReportContainer} exact/>
+                        <Route path='/' component={StartContainer} exact/>
+                        <Route path='/reports' component={ReportContainer} exact/>
                     </MainLayout>
                 </div>
             </div>

@@ -35,8 +35,8 @@ class StartContainer extends React.Component {
     componentDidMount() {
         this.fetchStartData();
         this.fetchStopData();
-        this.timer = setInterval(() => this.fetchStartData(), 3000);
-        this.timer = setInterval(() => this.fetchStopData(), 4000);
+        this.timer = setInterval(() => this.fetchStartData(), 30000);
+        this.timer = setInterval(() => this.fetchStopData(), 40000);
     }
     componentWillUnmount() {
         clearInterval(this.timer);
