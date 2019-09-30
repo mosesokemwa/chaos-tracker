@@ -60,22 +60,11 @@ class TaskController
 
     /**
      * @Route("/report", methods={"GET", "POST"})
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getServiceControl(Request $request)
+    public function getServiceControl()
     {
-        $data=$request->getContent();
-        $jsonData=json_decode($data);
-        if ($jsonData===null){
-            return new JsonResponse(
-                [
-                    'status'=>402,
-                    'error' => 'Body is not a valid JSON'
-                ],402
-            );
-        }
-        $eventData = "joy";
-        return new JsonResponse(["data"=>"$eventData"]);
+        $stopServers = $this->eventLogger->reportManager(5, "REPORT");
+        return new JsonResponse([["number"=>$stopServers, "color"=>"yellow"]]);
     }
 }

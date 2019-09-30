@@ -53,12 +53,25 @@ class EventLogger
                 $dbData = $this->logDataToDatabase($eventType, $servers, $seconds);
                 return ["server"=>$servers, "db"=>$dbData];
             } elseif ($eventType=="STOP"){
-                $stop = 20;
+                $stop = $this->entityManager->getRepository(LogData::class)
+                    ->findRunningServers("START");
                 $seconds = 'PT40S';
                 $servers = random_int($start, $stop);
                 $dbData = $this->logDataToDatabase($eventType, $servers, $seconds);
                 return ["server"=>$servers, "db"=>$dbData];
             }
+        } catch (\Exception $e) {
+            return ["error"=>true,"errorMessage"=>$e->getMessage()];
+        }
+    }
+    public function reportManager($start, $eventType){
+        try {
+            $stop = $this->entityManager->getRepository(LogData::class)
+                ->findRunningServers("START");
+            $seconds = 'PT30S';
+            $servers = random_int($start, $stop);
+            $dbData = $this->logDataToDatabase($eventType, $servers, $seconds);
+            return ["server"=>$servers, "db"=>$dbData];
         } catch (\Exception $e) {
             return ["error"=>true,"errorMessage"=>$e->getMessage()];
         }

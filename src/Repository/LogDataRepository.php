@@ -46,7 +46,21 @@ class LogDataRepository extends ServiceEntityRepository
                 FROM App\Entity\LogData p 
                 WHERE p.eventType = :val 
                 ORDER BY p.programTime DESC"
-        )->setParameter("val", "$value")
+            )->setParameter("val", "$value")
+            ->setMaxResults(1);
+        return $query->execute();
+    }
+    public function findRunningServers($value)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager
+            ->createQuery(
+                "SELECT p.serverNum
+                FROM App\Entity\LogData p
+                WHERE p.eventType = :val
+                ORDER BY p.serverNum DESC"
+            )->setParameter("val", "$value")
             ->setMaxResults(1);
         return $query->execute();
     }
